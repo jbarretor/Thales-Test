@@ -11,16 +11,16 @@ namespace EmployeeService.API.Controllers
         private readonly EmployeeBusiness _employeeBusiness = employeeBusiness;
 
         [HttpGet]
-        public async Task<IActionResult> GetEmployees()
+        public IActionResult GetEmployees()
         {
             try
             {
-                var employees = await _employeeBusiness.GetEmployeesAsync();
+                var employees = _employeeBusiness.GetEmployeesAsync();
                 return Ok(employees);
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -39,7 +39,7 @@ namespace EmployeeService.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
     }

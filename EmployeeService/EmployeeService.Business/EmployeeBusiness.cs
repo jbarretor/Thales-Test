@@ -13,9 +13,9 @@ namespace EmployeeService.Business
     {
         private readonly EmployeesService _employeeService = employeeService;
 
-        public async Task<List<EmployeeDto>> GetEmployeesAsync()
+        public List<EmployeeDto> GetEmployeesAsync()
         {
-            var employeesRs = await _employeeService.GetEmployeesAsync();
+            var employeesRs = _employeeService.GetEmployeesAsync();
             var employees = new List<EmployeeDto>();
             foreach (var employee in employeesRs)
             {

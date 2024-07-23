@@ -1,4 +1,5 @@
 ﻿using EmployeeService.Domain.Models;
+using System.Net;
 using System.Net.Http.Json;
 
 namespace EmployeeService.DataAccess.Services
@@ -7,18 +8,64 @@ namespace EmployeeService.DataAccess.Services
     {
         private readonly HttpClient _httpClient = httpClient;
 
-        public async Task<List<Employee>> GetEmployeesAsync()
+        public List<Employee> GetEmployeesAsync()
         {
-            var response = await _httpClient.GetAsync("/employees");
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<List<Employee>>();
+            try
+            {
+                var response = _httpClient.GetAsync("/api/v1/employees").Result;
+
+                if (response == null)
+                {
+                    throw new Exception($"The service isn't responding.");
+                }
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new Exception($"StatusCode: ({response.StatusCode}) {(int)response.StatusCode} >> The execution is not successful.");
+                }
+
+                var result = response.Content.ReadFromJsonAsync<EmployeesResponse>().Result;
+
+                if (!result.status.Equals("success"))
+                {
+                    throw new Exception($"Something went wrong during execution >> Service Response: {result.message}");
+                }
+
+                return result.data;
+            }
+            finally
+            {
+                _httpClient.Dispose();
+            }
         }
 
         public async Task<Employee> GetEmployeeByIdAsync(int id)
         {
-            var response = await _httpClient.GetAsync($"/employee/{id}");
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<Employee>();
+            try
+            {
+                var response = await _httpClient.GetAsync($"/api/v1/employee/{id}");
+
+                if (response == null)
+                {
+                    throw new Exception($"The service isn't responding.");
+                }
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new Exception($"StatusCode: ({response.StatusCode}) {(int)response.StatusCode} >> The execution is not successful.");
+                }
+
+                var result = await response.Content.ReadFromJsonAsync<EmployeeByIdResponse>();
+
+                if (!result.status.Equals("success"))
+                {
+                    throw new Exception($"Something went wrong during execution >> Service Response: {result.message}");
+                }
+
+                return result.data;
+            }
+            finally
+            {
+                _httpClient.Dispose();
+            }
         }
     }
 }
