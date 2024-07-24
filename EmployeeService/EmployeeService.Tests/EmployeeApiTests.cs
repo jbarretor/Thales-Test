@@ -45,7 +45,7 @@ namespace EmployeeService.Tests
             Assert.AreEqual(3, (okResult.Value as List<EmployeeDto>).Count);
             foreach (var employee in okResult.Value as List<EmployeeDto>)
             {
-                Assert.AreEqual(employee.employee_anual_salary, employee.employee_salary * 12);
+                Assert.AreEqual(employee.employee_annual_salary, employee.employee_salary * 12);
             }
         }
 
@@ -84,7 +84,7 @@ namespace EmployeeService.Tests
             var okResult = result as OkObjectResult;
             Assert.IsNotNull(okResult);
             Assert.IsInstanceOf<EmployeeDto>(okResult.Value);
-            Assert.AreEqual((okResult.Value as EmployeeDto).employee_anual_salary, employee.employee_salary * 12);
+            Assert.AreEqual((okResult.Value as EmployeeDto).employee_annual_salary, employee.employee_salary * 12);
         }
 
         [Test]

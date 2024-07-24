@@ -39,7 +39,7 @@ namespace EmployeeService.Business
                 employee_salary = input.employee_salary,
                 employee_name = input.employee_name,
                 profile_image = input.profile_image,
-                employee_anual_salary = input.employee_salary * 12
+                employee_annual_salary = input.employee_salary * 12
             };
 
             return employee;
