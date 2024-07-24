@@ -1,21 +1,16 @@
 ﻿using EmployeeService.DataAccess.Services;
 using EmployeeService.Domain.Dtos;
 using EmployeeService.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EmployeeService.Business
 {
-    public class EmployeeBusiness (EmployeesService employeeService)
+    public class EmployeeBusiness(IService employeeService) : IEmployeeBusiness
     {
-        private readonly EmployeesService _employeeService = employeeService;
+        private readonly IService _employeeService = employeeService;
 
         public List<EmployeeDto> GetEmployeesAsync()
         {
-            var employeesRs = _employeeService.GetEmployeesAsync();
+            var employeesRs = _employeeService.GetAll();
             var employees = new List<EmployeeDto>();
             foreach (var employee in employeesRs)
             {
@@ -24,9 +19,13 @@ namespace EmployeeService.Business
             return employees;
         }
 
-        public async Task<EmployeeDto> GetEmployeeByIdAsync(int id)
+        public EmployeeDto GetEmployeeByIdAsync(int id)
         {
-            var employeeRs = await _employeeService.GetEmployeeByIdAsync(id);
+            var employeeRs = _employeeService.GetById(id);
+            if (employeeRs == null)
+            {
+                return null;
+            }
             var employee = CalculateAnnualSalary(employeeRs);
             return employee;
         }

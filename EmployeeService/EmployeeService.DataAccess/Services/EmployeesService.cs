@@ -4,11 +4,11 @@ using System.Net.Http.Json;
 
 namespace EmployeeService.DataAccess.Services
 {
-    public class EmployeesService(HttpClient httpClient)
+    public class EmployeesService(HttpClient httpClient) : IService
     {
         private readonly HttpClient _httpClient = httpClient;
 
-        public List<Employee> GetEmployeesAsync()
+        public List<Employee> GetAll()
         {
             try
             {
@@ -38,11 +38,11 @@ namespace EmployeeService.DataAccess.Services
             }
         }
 
-        public async Task<Employee> GetEmployeeByIdAsync(int id)
+        public Employee GetById(int id)
         {
             try
             {
-                var response = await _httpClient.GetAsync($"/api/v1/employee/{id}");
+                var response = _httpClient.GetAsync($"/api/v1/employee/{id}").Result;
 
                 if (response == null)
                 {
@@ -53,7 +53,7 @@ namespace EmployeeService.DataAccess.Services
                     throw new Exception($"StatusCode: ({response.StatusCode}) {(int)response.StatusCode} >> The execution is not successful.");
                 }
 
-                var result = await response.Content.ReadFromJsonAsync<EmployeeByIdResponse>();
+                var result = response.Content.ReadFromJsonAsync<EmployeeByIdResponse>().Result;
 
                 if (!result.status.Equals("success"))
                 {

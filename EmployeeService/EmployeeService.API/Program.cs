@@ -6,12 +6,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddHttpClient<EmployeesService>(client =>
+builder.Services.AddHttpClient<IService, EmployeesService>(client =>
 {
     var baseUrl = builder.Configuration["ThalesService:BaseUrl"];
     client.BaseAddress = new Uri(baseUrl);
 });
-builder.Services.AddTransient<EmployeeBusiness>();
+builder.Services.AddScoped<IEmployeeBusiness, EmployeeBusiness>();
 
 // Configure CORS
 builder.Services.AddCors(options =>

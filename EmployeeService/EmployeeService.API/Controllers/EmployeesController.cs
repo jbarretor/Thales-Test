@@ -1,14 +1,13 @@
 ﻿using EmployeeService.Business;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeService.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmployeesController(EmployeeBusiness employeeBusiness) : ControllerBase
+    public class EmployeesController(IEmployeeBusiness employeeBusiness) : ControllerBase
     {
-        private readonly EmployeeBusiness _employeeBusiness = employeeBusiness;
+        private readonly IEmployeeBusiness _employeeBusiness = employeeBusiness;
 
         [HttpGet]
         public IActionResult GetEmployees()
@@ -25,11 +24,11 @@ namespace EmployeeService.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetEmployee(int id)
+        public IActionResult GetEmployee(int id)
         {
             try
             {
-                var employee = await _employeeBusiness.GetEmployeeByIdAsync(id);
+                var employee = _employeeBusiness.GetEmployeeByIdAsync(id);
                 if (employee == null)
                 {
                     return NotFound();
